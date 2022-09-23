@@ -13,6 +13,8 @@ namespace vino {
 		T read(int index);
 		// Writes a sample to the end of the buffer. Returns the index written to.
 		int write(T x);
+
+		size_t getSize();
 	private:
 		size_t size;
 		vector<T> buffer;
@@ -32,6 +34,16 @@ namespace vino {
 
 	template <class T>
 	CircBuffer<T>::~CircBuffer() { }
+
+	template <class T>
+	size_t CircBuffer<T>::getSize() {
+		if (!wrapped_once) {
+			return wptr;
+		}
+		else {
+			return size;
+		}
+	}
 
 	template <class T>
 	T CircBuffer<T>::read(int index) {
