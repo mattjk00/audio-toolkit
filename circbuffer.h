@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 using std::vector;
 
 namespace vino {
@@ -15,6 +16,8 @@ namespace vino {
 		int write(T x);
 
 		size_t getSize();
+
+		bool filled() { return wrapped_once; }
 	private:
 		size_t size;
 		vector<T> buffer;
@@ -38,7 +41,7 @@ namespace vino {
 	template <class T>
 	size_t CircBuffer<T>::getSize() {
 		if (!wrapped_once) {
-			return wptr;
+			return (size_t)wptr;
 		}
 		else {
 			return size;
@@ -48,11 +51,11 @@ namespace vino {
 	template <class T>
 	T CircBuffer<T>::read(int index) {
 		int i = index + rptr;
-		if (i >= size) {
-			i = i - size;
+		if (i >= (int)size) {
+			i = i - (int)size;
 		}
 		else if (i < 0) {
-			i = size + i;
+			i = (int)size + i;
 		}
 		return buffer[i];
 	}
@@ -61,7 +64,7 @@ namespace vino {
 	int CircBuffer<T>::write(T x) {
 		buffer[wptr] = x;
 		wptr++;
-		if (wptr == size) {
+		if (wptr == (int)size) {
 			wptr = 0;
 			if (!wrapped_once) {
 				wrapped_once = true;
@@ -71,7 +74,7 @@ namespace vino {
 
 		if (wrapped_once) {
 			rptr++;
-			if (rptr == size) {
+			if (rptr == (int)size) {
 				rptr = 0;
 			}
 		}
